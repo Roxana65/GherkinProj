@@ -146,5 +146,18 @@
     "agreementCheckbox": "//input[@value='I agree to be contacted by Fortech representatives via email or phone.*']",
     "submitButton": "//input[@type='submit'][@class='wpcf7-form-control wpcf7-submit btn']",
     "emailNotification": "//div[contains(text(),'Your message has been sent. We will get back to you shortly.')]"
+  },
+  "page": {
+    "mainPage": "https://keyfood.ro/",
+    "myAccount": "https://keyfood.ro/my-account-2/"
+  },
+  "headerOptions": {
+    "myAccount": "//*[contains(text(),'My account')]"
+  },
+  "login": {
+      "username": "//input[@id='username']",
+      "password": "//input[@id='password']",
+      "loginButton": "//button[@type='submit']",
+      "confirmation": "//*[contains(text(),'Log out')]"
   }
 }

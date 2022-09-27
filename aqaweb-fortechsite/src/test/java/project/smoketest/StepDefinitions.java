@@ -27,25 +27,22 @@ public class StepDefinitions extends CommonDefinitions {
 
     // GIVEN Steps
 
-    @Given("^I open the browser$")
+    @Given("^the browser is opened$")
     public void initialize() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.manage().window().maximize();
     }
 
-    @Given("^I close the browser$")
+    @Given("^the browser is closed$")
     public void tearDown() {
         driver.close();
         driver.quit();
     }
 
-    @Given("^I Navigate To \"(.*)\" Page$")
-    public void i_Navigate_To_Page(String value) {
-        policyProcessing();
-        // using properties like this means that we can accept either the url or a
-        // property key for the url
-        driver.navigate().to(properties.getProperty(value, value));
+    @Given("^user navigates to \"(.*)\" page$")
+    public void user_Navigate_To_Page(String value) {
+        driver.navigate().to(environment.resolve(value));
     }
 
     // WHEN Steps
@@ -69,7 +66,7 @@ public class StepDefinitions extends CommonDefinitions {
         wait10AndClick(environment.resolve(text));
     }
 
-    @When("^I Click On \"(.*)\" Button$")
+    @When("^user clicks on \"(.*)\" button$")
     public void i_Click_On_Button(String nameOfButtonToClickOn) {
         wait10AndClick(environment.resolve(nameOfButtonToClickOn));
     }
@@ -95,11 +92,17 @@ public class StepDefinitions extends CommonDefinitions {
         logo.click();
     }
 
+    @When("user enters \"(.*)\" and \"(.*)\" credentials$")
+    public void user_enter_and(String username,String password)  {
+        wait10AndType(environment.resolve(username), "customer");
+        wait10AndType(environment.resolve(password),"customer@123");
+    }
+
     // THEN Steps
 
-    @Then("^I Verify That \"(.*)\" Page Is Loaded$")
+    @Then("^page \"(.*)\" is loaded successfully$")
     public void i_Verify_That_Page_Is_Loaded(String currentPage) {
-        assertEquals(properties.getProperty(currentPage, environment.resolve(currentPage)), driver.getCurrentUrl());
+        assertEquals(environment.resolve(currentPage), driver.getCurrentUrl());
     }
 
     @Then("^I Verify That \"(.*)\" Page Is Loaded In Another Tab$")
@@ -164,6 +167,12 @@ public class StepDefinitions extends CommonDefinitions {
     @Then("^I Verify That \"(.*)\" was sent")
     public void i_verify_the_email_was_sent(String element) {
         Assert.assertTrue(findElementByXPath(environment.resolve(element)).isDisplayed());
+    }
+
+    @Then("^\"(.*)\" is displayed$")
+    public void i_verify_the_element_is_displayed(String string) {
+        Boolean found = waitUntilElementIsDisplayed(string,10);
+        Assert.assertEquals(found,true);
     }
 
     //AND Steps

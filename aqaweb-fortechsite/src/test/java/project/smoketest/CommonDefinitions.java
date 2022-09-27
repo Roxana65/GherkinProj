@@ -8,7 +8,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import project.Environment;
-import project.Utility;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,7 +17,6 @@ public class CommonDefinitions {
     public static final String SCREENSHOTS_PATH = "./test-logs";
 
     public static WebDriver driver = null;
-    public static Properties properties = Utility.getPropertiesFromFile("project/config.properties");
     public static Environment environment = Environment.newInstance("project/context.json");
 
     public void wait10AndClick(String xpath) {
@@ -29,18 +27,16 @@ public class CommonDefinitions {
 
     public void wait10AndType(String xpathForStatedTextBox, String stringToType) {
         WebDriverWait waiter = new WebDriverWait(driver, 10);
-        waiter.until(ExpectedConditions
-                .elementToBeClickable(By.xpath(xpathForStatedTextBox)));
+        waiter.until(ExpectedConditions.elementToBeClickable(By.xpath(xpathForStatedTextBox)));
         WebElement statedTextBox = findElementByXPath(xpathForStatedTextBox);
         Assert.assertNotNull(statedTextBox);
         statedTextBox.sendKeys(stringToType);
     }
 
-    public void policyProcessing() {
-        WebElement acceptAndClose = findElementByXPath(environment.resolve("policy"));
-        if (acceptAndClose != null && acceptAndClose.isDisplayed()) {
-            acceptAndClose.click();
-        }
+    public boolean waitUntilElementIsDisplayed(String xpath, int seconds) {
+        WebDriverWait waiter = new WebDriverWait(driver, seconds);
+        waiter.until(ExpectedConditions.presenceOfElementLocated(By.xpath(environment.resolve(xpath))));
+        return driver.findElement(By.xpath(environment.resolve(xpath))).isDisplayed();
     }
 
     public boolean isPageOnHost(String host) {
